@@ -8,10 +8,11 @@ module HelloCode
           # Default items per page
           items_per_page 25
 
-          scope :paginate, lambda { |page|
-            limit(@items_per_page)
-              .offset(([page.to_i, 1].max - 1) * @items_per_page)
+          scope :paginate, lambda { |page, items_per_page = @items_per_page|
+            limit(items_per_page)
+              .offset(([page.to_i, 1].max - 1) * items_per_page)
               .extending do
+
               def current_page
                 @current_page ||=
                   if total_pages.zero?
