@@ -11,7 +11,7 @@ module HelloCode
         end
 
         def delete!
-          self.deleted_at = Time.now
+          self.deleted_at = Time.current
           self
         end
       end
