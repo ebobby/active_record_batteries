@@ -1,11 +1,11 @@
 module HelloCode
   module ActiveRecordUtils
     module Concerns
-      module RelationshipBuilder
+      module RelationshipScopes
         extend ActiveSupport::Concern
 
         module ClassMethods
-          def relationship_build(relationship, suffix = nil)
+          def relationship_scopes(relationship, suffix = nil)
             suffix ||= relationship
 
             with_scope_name    = "with_#{ suffix }".to_sym
