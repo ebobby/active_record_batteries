@@ -15,7 +15,7 @@ module HelloCode
 
             scope with_scope_name,    -> { joins(relationship) }
             scope include_scope_name, -> { includes(relationship) }
-            scope and_scope_name,     -> { joins(relationship) }
+            scope and_scope_name,     -> { send(with_scope_name).send(include_scope_name) }
             scope load_scope_name,    -> { preload(relationship) }
 
             nil
