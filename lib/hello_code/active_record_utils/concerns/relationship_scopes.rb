@@ -13,8 +13,10 @@ module HelloCode
             and_scope_name     = "and_#{ suffix }".to_sym
 
             scope with_scope_name,    -> { joins(relationship) }
-            scope include_scope_name, -> { preload(relationship) }
-            scope and_scope_name,     -> { eager_load(relationship) }
+            scope include_scope_name, -> { includes(relationship) }
+            scope and_scope_name,     -> { joins(relationship) }
+
+            scope load_scope_name,    -> { preload(relationship) }
 
             nil
           end
