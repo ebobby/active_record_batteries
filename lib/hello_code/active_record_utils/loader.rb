@@ -4,9 +4,8 @@ module HelloCode
       extend ActiveSupport::Concern
 
       module ClassMethods
-        def utilities! (*modules)
+        def utility! (*modules)
           modules = modules.is_a?(Array) ? modules : [ modules ]
-
 
           modules.each.map(&:to_s).map(&:camelize).each do |mod|
             include HelloCode::ActiveRecordUtils::Concerns.const_get(mod)
