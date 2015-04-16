@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    hello_code_active_record_utils (0.1.0)
+    hello_code_active_record_utils (0.2.0)
       rails (~> 4.2.1)
 
 GEM
