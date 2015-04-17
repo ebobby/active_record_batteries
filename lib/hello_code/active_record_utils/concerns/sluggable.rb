@@ -13,7 +13,7 @@ module HelloCode
           scope :by_slug, ->(slug) { where(slug: slug) }
 
           # Slug must be present
-          validates :slug, presence: true, length: { maximum: 256 }
+          validates :slug, presence: true, uniqueness:true, length: { maximum: 256 }
         end
 
         module ClassMethods
@@ -42,19 +42,18 @@ module HelloCode
           tentative_slug = base_slug
           while duplicate_slug?(tentative_slug)
             tentative_slug = generate_slug_name(base_slug)
-          end
+          end 
           tentative_slug
         end
 
         def duplicate_slug?(slug)
           self.class
             .where.not(id: id)
-            .by_slug(slug)
-            .exists?
+            .exists?(slug: slug)
         end
 
         def generate_slug_name(slug)
-          "#{slug}-#{SecureRandom.random_number(10_000)}"
+          "#{slug}-#{SecureRandom.urlsafe_base64(4)}"
         end
       end
     end
