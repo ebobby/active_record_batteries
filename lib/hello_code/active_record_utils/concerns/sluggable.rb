@@ -40,9 +40,9 @@ module HelloCode
 
         def qualify_slug(base_slug)
           tentative_slug = base_slug
-          begin
+          while duplicate_slug?(tentative_slug)
             tentative_slug = generate_slug_name(base_slug)
-          end while duplicate_slug?(tentative_slug)
+          end 
           tentative_slug
         end
 
@@ -53,7 +53,7 @@ module HelloCode
         end
 
         def generate_slug_name(slug)
-          "#{slug}-#{SecureRandom.random_number(10_000)}"
+          "#{slug}-#{SecureRandom.urlsafe_base64(4)}"
         end
       end
     end
