@@ -8,9 +8,8 @@ module HelloCode
           scope :filtered, lambda { |values|
             current = all
             filters.each do |key, method|
-              if values.try(:key?, key)
-                current = current.send(method, values[key]) if
-                  current.respond_to?(method)
+              if values.try(:key?, key) && current.respond_to?(method)
+                current = current.send(method, values[key])
               end
             end
             current
