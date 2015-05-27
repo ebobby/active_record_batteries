@@ -5,11 +5,11 @@ module ActiveRecordBatteries
 
       included do
         # Default items per page
-        items_per_page 25
+        page_items 25
 
-        scope :paginate, lambda { |page, items_per_page = @items_per_page|
-          limit(items_per_page)
-            .offset(([page.to_i, 1].max - 1) * items_per_page)
+        scope :paginate, lambda { |page, page_items = @page_items|
+          limit(page_items)
+            .offset(([page.to_i, 1].max - 1) * page_items)
             .extending do
 
             def current_page
@@ -42,13 +42,13 @@ module ActiveRecordBatteries
       end
 
       module ClassMethods
-        def items_per_page(items)
-          @items_per_page = items
+        def page_items(items)
+          @page_items = items
         end
 
-        def pages
+        def pages(page_items = @page_items)
           (all.except(:offset, :limit, :order, :includes)
-            .distinct(:id).count / @items_per_page.to_f).ceil
+            .distinct(:id).count / page_items.to_f).ceil
         end
       end
     end
