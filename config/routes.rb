@@ -1,2 +1,2 @@
-HelloCode::ActiveRecordUtils::Engine.routes.draw do
+ActiveRecordBatteries::Engine.routes.draw do
 end
