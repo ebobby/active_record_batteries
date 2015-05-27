@@ -4,6 +4,9 @@ module ActiveRecordBatteries
       extend ActiveSupport::Concern
 
       included do
+        # Backwards compatibility
+        slug_base_column :name
+
         # Be sure to create a valid slug before validating and saving.
         before_validation :set_slug, on: [:create, :update]
         after_validation :delete_slug_errors
@@ -16,6 +19,10 @@ module ActiveRecordBatteries
       end
 
       module ClassMethods
+        def slug_base_column(column_name)
+          @slug_base_column_name = column_name.to_sym
+        end
+
         # Find by slug
         def find_by_slug(slug)
           by_slug(slug).take
@@ -28,9 +35,13 @@ module ActiveRecordBatteries
 
       private
 
+      def slug_base_column_value
+        send(self.class.instance_variable_get(:@slug_base_column_name))
+      end
+
       def set_slug
-        self.slug = qualify_slug(name.parameterize) if
-          name.present? && slug.blank?
+        self.slug = qualify_slug(slug_base_column_value.parameterize) if
+          slug_base_column_value.present? && slug.blank?
       end
 
       def delete_slug_errors
