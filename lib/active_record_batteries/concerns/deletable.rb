@@ -13,6 +13,10 @@ module ActiveRecordBatteries
         self.deleted_at = Time.current
         self
       end
+
+      def deleted?
+        !!self.deleted_at
+      end
     end
   end
 end
