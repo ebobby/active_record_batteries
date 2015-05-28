@@ -12,8 +12,10 @@ Gem::Specification.new do |s|
   s.description = "Several small active record modules to empower models in a simple way."
   s.license     = "MIT"
 
-  s.files = Dir["lib/**/*", "MIT-LICENSE", "Rakefile", "README.rdoc"]
+  s.files      = Dir["lib/**/*", "MIT-LICENSE", "Rakefile", "README.rdoc"]
+  s.test_files = Dir["spec/**/*"]
 
   s.add_dependency             "rails", "~> 4.2.1"
   s.add_development_dependency "sqlite3"
+  s.add_development_dependency "rspec-rails"
 end
