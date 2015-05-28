@@ -61,6 +61,32 @@ Article.pages(15)                 # how many pages if we have 15 items per page
 
 ```
 
+### Sluggable
+
+```ruby
+class Article < ActiveRecord::Base
+  batteries! :sluggable        # Requires the model to have column named slug.
+
+  slug_base_column :title      # Column to generate the slug from. Default is :name
+end
+```
+
+```ruby
+article = Article.create(title: "Hello, world")     # Create a new article
+
+article.slug                                        # Slug automatically generated
+=> "hello-world"
+
+articles = Article.by_slug("hello-world")           # New scope
+
+article  = Article.find_by_slug("hello-world")      # New finder
+
+article = Article.create(title: "Hello, world")     # Create another article with clashing slug
+
+article.slug                                        # Automatically qualified
+=> "hello-world-kJNLnA"
+```
+
 ## Final remarks
 
 We wrote this code as we built [Chopeo](https://www.chopeo.mx) because we found most solutions to these problems to be more complicated than they needed to be for our case.
