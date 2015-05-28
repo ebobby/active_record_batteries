@@ -133,15 +133,52 @@ end
 ```
 
 ```ruby
-Article.by_title("Hello, world")                   # Filter created a scope.
-=> <Article>
+ Article.by_title("Hello, world")                   # Filter created a scope.
+ => <Article>
 
  # Filtered takes a hash, the keys are matched against the
  # filter list and the scopes are called with the value concatenating them.
  # It is designed to take the params array from a controller.
-Article.filtered(by_title: "Hello, world", by_author: 1)
+ Article.filtered(by_title: "Hello, world", by_author: 1)
 
 ```
+
+### RelationshipScopes
+
+```ruby
+class Article < ActiveRecord::Base
+  batteries! :relationship_scopes
+
+  has_one  :author
+  has_many :tags
+
+  # Add relationship scopes
+  relationship_scopes :tags
+
+  # Add relationship scopes with a custom suffix
+  relationship_scopes :author, :writer
+end
+```
+
+```ruby
+ # with_writer ensures a join with the relationship, so you can filter by it.
+ Article.with_writer.merge(Author.by_name("Ramit"))
+
+ # Includes the relationship, avoiding the N+1 queries problem.
+ Article.include_tags.all
+
+ # Also includes the relationship, but forces a single query (most of the time) and
+ # and INNER JOIN. If your master relationship has no values, this will return null.
+ Article.and_tags.all
+
+ # Preload the relationship. Similar to include.
+ Article.pload_tags.all
+
+ # Eager load the relationship. Similar to include.
+ Article.eload_tags.all
+ ```
+
+Relationship scopes are a great way to optimize your queries. Play around with the different scopes and analyze the queries they trigger. The resulting query can be different among the scopes  depending on the situation.
 
 ## Final remarks
 
