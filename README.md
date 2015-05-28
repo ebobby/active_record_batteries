@@ -115,6 +115,32 @@ article.deleted?                                   # This *is* deleted
 => true
 ```
 
+### Filterable
+
+```ruby
+class Article < ActiveRecord::Base
+  batteries! :filterable
+
+  # Normal scope
+  scope :by_author, ->(author_id) { where(author_id: author_id) }
+
+  # Add a filter and create a scope with it. Filters need to take one parameter.
+  add_filter :by_title, ->(title) { where(title: title) }
+
+  # Add a filter with an existing scope.
+  add_filter :by_author
+end
+```
+
+```ruby
+Article.by_title("Hello, world")                   # Filter created a scope.
+=> <Article>
+
+Article.filtered(by_title: "Hello, world",         # Filtered takes a hash, the keys are matched against the
+                 by_author: 1)                     # filter list and the scopes are called with the value concatenating them.
+                                                   # It is designed to take the params array from a controller.
+```
+
 ## Final remarks
 
 We wrote this code as we built [Chopeo](https://www.chopeo.mx) because we found most solutions to these problems to be more complicated than they needed to be for our case.
