@@ -18,7 +18,7 @@ module ActiveRecordBatteries
       module ClassMethods
         def filter_add(method_name, callable = nil)
           scope(method_name, callable) if callable
-          filters[method_name] =  method_name
+          filters[method_name] = method_name
         end
 
         def filters
