@@ -22,6 +22,10 @@ RSpec.describe ActiveRecordBatteries do
       Article.create(title: "article_deletable", author: Author.first)
     end
 
+    after :all do
+      Article.including_deleted.find_by(title: "article_deletable").destroy
+    end
+
     it "new instance should not deleted" do
        expect(Article.new.deleted?).to be false
     end
@@ -71,6 +75,11 @@ RSpec.describe ActiveRecordBatteries do
     before :all do
       Article.create(title: "article_filterable",  author: Author.first)
       Article.create(title: "article_filterable2", author: Author.first, slug: 'filtered_1')
+    end
+
+    after :all do
+      Article.by_title("article_filterable").destroy_all
+      Article.by_title("article_filterable2").destroy_all
     end
 
     it "should be hash" do
