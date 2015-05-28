@@ -33,11 +33,39 @@ end
 
 You can use any or all of them at the same time.
 
+### Paginable
+
+```ruby
+class Article < ActiveRecord::Base
+  batteries! :paginable
+
+  page_items 10   # default is 25
+end
+```
+
+```ruby
+Article.pages                     # how many pages with the current page_items configuration.
+
+Article.pages(15)                 # how many pages if we have 15 items per page
+
+@articles = Article.paginate(2)   # Get page 2
+
+@articles.current_page            # What page are we on?
+=> 2
+
+@articles.total_items             # How many items do we have in total?
+=> 23
+
+@articles.total_pages             # How many pages do we have?
+=> 3
+
+```
+
 ## Final remarks
 
 We wrote this code as we built [Chopeo](https://www.chopeo.mx) because we found most solutions to these problems to be more complicated than they needed to be for our case.
 
-Most people build things in a way that should work for every case which is a great goal. For this library, our goal was to keep it as simple as possible. It should cover most situations.
+Most people build things in a way that tries to work in every corner case. It is a great goal. For this library, our goal was to keep it as simple as possible. It should cover most situations.
 
 If you have any questions or comments please feel free to contact me at ebobby@ebobby.org. Pull requests are welcome.
 
