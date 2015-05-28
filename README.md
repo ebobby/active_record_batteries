@@ -83,7 +83,7 @@ article  = Article.find_by_slug("hello-world")      # New finder
 
 article = Article.create(title: "Hello, world")     # Create another article with clashing slug
 
-article.slug                                        # Automatically qualified
+article.slug                                        # Automatically qualified, slugs are unique.
 => "hello-world-kJNLnA"
 ```
 
