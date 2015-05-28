@@ -65,7 +65,7 @@ Article.pages(15)                 # how many pages if we have 15 items per page
 
 ```ruby
 class Article < ActiveRecord::Base
-  batteries! :sluggable        # Requires the model to have column named slug.
+  batteries! :sluggable        # Requires the model to have a string column named slug.
 
   slug_base_column :title      # Column to generate the slug from. Default is :name
 end
@@ -85,6 +85,34 @@ article = Article.create(title: "Hello, world")     # Create another article wit
 
 article.slug                                        # Automatically qualified
 => "hello-world-kJNLnA"
+```
+
+### Deletable
+
+```ruby
+class Article < ActiveRecord::Base
+  batteries! :deletable        # Requires the model to have a datetime column named deleted_at.
+end
+```
+
+```ruby
+article = Article.create(title: "Hello, world")    # Create a new article
+
+article.deleted?                                   # Not deleted
+=> false
+
+article.delete!                                    # Delete the record
+article.save!
+
+Article.find_by(title: "Hello, world")             # Can't find deleted records.
+=> nil
+
+article = Article.
+            including_deleted.
+            find_by(title: "Hello, world")         # This scope allows to find it
+
+article.deleted?                                   # This *is* deleted
+=> true
 ```
 
 ## Final remarks
