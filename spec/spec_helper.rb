@@ -7,8 +7,11 @@ ActiveRecord::Schema.verbose = false
 ActiveRecord::Schema.define do
   self.verbose = false
 
-  create_table :author do |t|
+  create_table :authors do |t|
     t.string :name
+
+    # Sluggable
+    t.string :slug
 
     t.timestamps null: false
   end
@@ -32,10 +35,19 @@ class Author < ActiveRecord::Base
   batteries! :sluggable, :paginable, :filterable, :relationship_scopes
 
   has_many :articles
+
+  filter_add :by_slug
 end
 
 class Article < ActiveRecord::Base
   batteries! :sluggable, :paginable, :filterable, :relationship_scopes, :deletable
 
   belongs_to :author
+
+  slug_base_column :title
+
+  filter_add :by_slug
+  filter_add :by_title, ->(title) { where(title: title) }
+
+  page_items 5
 end
