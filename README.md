@@ -136,7 +136,6 @@ end
 Article.by_title("Hello, world")                   # Filter created a scope.
 => <Article>
 
-
  # Filtered takes a hash, the keys are matched against the
  # filter list and the scopes are called with the value concatenating them.
  # It is designed to take the params array from a controller.
