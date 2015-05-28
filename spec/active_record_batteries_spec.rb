@@ -104,4 +104,46 @@ RSpec.describe ActiveRecordBatteries do
       expect(results).not_to be_empty
     end
   end
+
+  context "Paginable" do
+    it "should set items per page" do
+      expect(Author.page_items(2)).to eql(2)
+    end
+
+    it "should count pages" do
+      expect(Article.pages).to eql((Article.count / 5.0).ceil)
+    end
+
+    it "should count pages with parameter passed" do
+      expect(Article.pages(3)).to eql((Article.count / 3.0).ceil)
+    end
+
+    it "should paginate" do
+      expect(Article.paginate(2).current_page).to eq(2)
+    end
+
+    it "should paginate with params" do
+      expect(Article.paginate(3, 50).current_page).to eq(3)
+    end
+
+    it "should not lose items" do
+      expect(Article.paginate(1).total_items).to eq(Article.count)
+    end
+
+    it "should count pages correctly after pagination" do
+      expect(Article.paginate(2).total_pages).to eq(Article.pages)
+    end
+
+    it "should not be affected by includes" do
+      expect(Author.includes(:articles).
+              paginate(2).
+              total_pages).to eq(Author.pages)
+    end
+
+    it "should not be affected by joins" do
+      expect(Author.joins(:articles).
+              paginate(2).
+              total_pages).to eq(Author.pages)
+    end
+  end
 end
