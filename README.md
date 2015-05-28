@@ -180,6 +180,38 @@ end
 
 Relationship scopes are a great way to optimize your queries. Play around with the different scopes and analyze the queries they trigger. The resulting query can be different among the scopes  depending on the situation.
 
+## All of them combined give you great power
+```ruby
+class Order < ActiveRecord::Base
+  batteries! :sluggable, :paginable, :filterable, :relationship_scopes, :deletable
+
+  scope :newer, lambda { order(id: :desc) }
+
+  # Scopes for relationships
+  relationship_scopes :order_items, :items
+
+  filter_add :ordered_since, lambda { |since|
+    where('ordered_at::date >= ?', since)
+  }
+
+  filter_add :ordered_to, lambda { |to|
+    where('ordered_at::date <= ?', to)
+  }
+
+  ...
+end
+
+class OrdersController < ApplicationController
+  def index
+    @orders = Order.
+                and_items.
+                filtered(params).
+                paginate(params[:page]).
+                newer
+  end
+end
+```
+
 ## Final remarks
 
 We wrote this code as we built [Chopeo](https://www.chopeo.mx) because we found most solutions to these problems to be more complicated than they needed to be for our case.
