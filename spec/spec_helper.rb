@@ -37,6 +37,8 @@ class Author < ActiveRecord::Base
   has_many :articles
 
   filter_add :by_slug
+
+  relationship_scopes :articles
 end
 
 class Article < ActiveRecord::Base
