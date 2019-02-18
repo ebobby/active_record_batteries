@@ -6,9 +6,8 @@ ActiveRecordBatteries is a simple library that aims to provide some basic, usefu
 
 - *Paginable*, provides database pagination.
 - *Sluggable*, provides slug support for your models, normally used for pretty urls.
-- *Deletable*, provides logical deletes.
+- *Deleteble*, provides logical deletes.
 - *Filterable*, provides an easy way to filter your results.
-- *RelationshipScopes*, provides a way to add scopes for your relationships in a single line.
 
 ## Getting started
 
@@ -20,14 +19,16 @@ gem active_record_batteries'
 
 Run the bundle command to install it.
 
-
 ## Usage
 
-To load the batteries on your models:
+To load the batteries on your models you just include the module you need:
 
 ```ruby
 class Article < ActiveRecord::Base
-  batteries! :sluggable, :paginable, :filterable, :relationship_scopes, :deletable
+  include ActiveRecordBatteries::Concerns::Sluggable,
+          ActiveRecordBatteries::Concerns::Paginable,
+          ActiveRecordBatteries::Concerns::Filterable,
+          ActiveRecordBatteries::Concerns::Deletable
 end
 ```
 
@@ -37,14 +38,14 @@ You can use any or all of them at the same time.
 
 ```ruby
 class Article < ActiveRecord::Base
-  batteries! :paginable
+  include ActiveRecordBatteries::Concerns::Paginable
 
-  page_items 10   # default is 25
+  items_per_page 10   # default is 25
 end
 ```
 
 ```ruby
-Article.pages                     # how many pages with the current page_items configuration.
+Article.pages                     # how many pages with the current items_per_page configuration.
 
 Article.pages(15)                 # how many pages if we have 15 items per page
 
@@ -65,7 +66,7 @@ Article.pages(15)                 # how many pages if we have 15 items per page
 
 ```ruby
 class Article < ActiveRecord::Base
-  batteries! :sluggable        # Requires the model to have a string column named slug.
+  include ActiveRecordBatteries::Concerns::Sluggable   # Requires the model to have a string column named slug.
 
   slug_base_column :title      # Column to generate the slug from. Default is :name
 end
@@ -91,7 +92,7 @@ article.slug                                        # Automatically qualified, s
 
 ```ruby
 class Article < ActiveRecord::Base
-  batteries! :deletable        # Requires the model to have a datetime column named deleted_at.
+  include ActiveRecordBatteries::Concerns::Deletable     # Requires the model to have a datetime column named deleted_at.
 end
 ```
 
@@ -119,16 +120,16 @@ article.deleted?                                   # This *is* deleted
 
 ```ruby
 class Article < ActiveRecord::Base
-  batteries! :filterable
+   include ActiveRecordBatteries::Concerns::Paginable
 
   # Normal scope
   scope :by_author, ->(author_id) { where(author_id: author_id) }
 
   # Add a filter and create a scope with it. Filters need to take one parameter.
-  add_filter :by_title, ->(title) { where(title: title) }
+  filter_by :by_title, ->(title) { where(title: title) }
 
   # Add a filter with an existing scope.
-  add_filter :by_author
+  filter_by :by_author
 end
 ```
 
@@ -140,61 +141,24 @@ end
  # filter list and the scopes are called with the value concatenating them.
  # It is designed to take the params array from a controller.
  Article.filtered(by_title: "Hello, world", by_author: 1)
-
 ```
-
-### RelationshipScopes
-
-```ruby
-class Article < ActiveRecord::Base
-  batteries! :relationship_scopes
-
-  has_one  :author
-  has_many :tags
-
-  # Add relationship scopes
-  relationship_scopes :tags
-
-  # Add relationship scopes with a custom suffix
-  relationship_scopes :author, :writer
-end
-```
-
-```ruby
- # with_writer ensures a join with the relationship, so you can filter by it.
- Article.with_writer.merge(Author.by_name("Ramit"))
-
- # Includes the relationship, avoiding the N+1 queries problem.
- Article.include_tags.all
-
- # Also includes the relationship, but forces a single query (most of the time) and
- # and INNER JOIN. If your master relationship has no values, this will return null.
- Article.and_tags.all
-
- # Preload the relationship. Similar to include.
- Article.pload_tags.all
-
- # Eager load the relationship. Similar to include.
- Article.eload_tags.all
- ```
-
-Relationship scopes are a great way to optimize your queries. Play around with the different scopes and analyze the queries they trigger. The resulting query can be different among the scopes  depending on the situation.
 
 ## All of them combined give you great power
 ```ruby
 class Order < ActiveRecord::Base
-  batteries! :sluggable, :paginable, :filterable, :relationship_scopes, :deletable
+  include ActiveRecordBatteries::Concerns::Sluggable,
+          ActiveRecordBatteries::Concerns::Paginable,
+          ActiveRecordBatteries::Concerns::Filterable,
+          ActiveRecordBatteries::Concerns::Deletable
 
-  scope :newer, lambda { order(id: :desc) }
+  scope :newer, -> { order(id: :desc) }
+  scope :and_items, -> { joins(:order_items) }
 
-  # Scopes for relationships
-  relationship_scopes :order_items, :items
-
-  filter_add :ordered_since, lambda { |since|
+  filter_by :ordered_since, lambda { |since|
     where('ordered_at::date >= ?', since)
   }
 
-  filter_add :ordered_to, lambda { |to|
+  filter_by :ordered_to, lambda { |to|
     where('ordered_at::date <= ?', to)
   }
 
