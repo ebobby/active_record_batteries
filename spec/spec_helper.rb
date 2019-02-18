@@ -54,5 +54,5 @@ class Article < ActiveRecord::Base
   filter_by :by_slug
   filter_by :by_title, ->(title) { where(title: title) }
 
-  page_items 5
+  items_per_page 5
 end

@@ -107,7 +107,7 @@ RSpec.describe ActiveRecordBatteries do
 
   context "Paginable" do
     it "should set items per page" do
-      expect(Author.page_items(2)).to eql(2)
+      expect(Author.items_per_page(2)).to eql(2)
     end
 
     it "should count pages" do
