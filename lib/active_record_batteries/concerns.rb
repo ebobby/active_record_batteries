@@ -2,7 +2,7 @@ module ActiveRecordBatteries
   module Concerns
     extend ActiveSupport::Autoload
 
-    autoload :Deletable,          'active_record_batteries/concerns/deletable'
+    autoload :Deleteable,         'active_record_batteries/concerns/deleteable'
     autoload :Filterable,         'active_record_batteries/concerns/filterable'
     autoload :Paginable,          'active_record_batteries/concerns/paginable'
     autoload :Sluggable,          'active_record_batteries/concerns/sluggable'

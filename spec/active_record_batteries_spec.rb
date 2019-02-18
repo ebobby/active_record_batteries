@@ -17,13 +17,13 @@ RSpec.describe ActiveRecordBatteries do
     end
   end
 
-  context "Deletable" do
+  context "Deleteable" do
     before :all do
-      Article.create(title: "article_deletable", author: Author.first)
+      Article.create(title: "article_deleteable", author: Author.first)
     end
 
     after :all do
-      Article.including_deleted.find_by(title: "article_deletable").destroy
+      Article.including_deleted.find_by(title: "article_deleteable").destroy
     end
 
     it "new instance should not deleted" do
@@ -42,13 +42,13 @@ RSpec.describe ActiveRecordBatteries do
     end
 
     it "should not be deleted" do
-      obj = Article.find_by(title: "article_deletable")
+      obj = Article.find_by(title: "article_deleteable")
 
       expect(obj.deleted?).to be false
     end
 
     it "should delete" do
-      obj = Article.find_by(title: "article_deletable")
+      obj = Article.find_by(title: "article_deleteable")
       obj.delete!
       obj.save
 
@@ -56,17 +56,17 @@ RSpec.describe ActiveRecordBatteries do
     end
 
     it "should not find" do
-      obj = Article.find_by(title: "article_deletable")
+      obj = Article.find_by(title: "article_deleteable")
       expect(obj).to eq(nil)
     end
 
     it "should find" do
-      obj = Article.including_deleted.find_by(title: "article_deletable")
+      obj = Article.including_deleted.find_by(title: "article_deleteable")
       expect(obj).not_to eq(nil)
     end
 
     it "should stay deleted" do
-      obj = Article.including_deleted.find_by(title: "article_deletable")
+      obj = Article.including_deleted.find_by(title: "article_deleteable")
       expect(obj.deleted?).to be true
     end
   end

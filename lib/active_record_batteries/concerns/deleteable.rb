@@ -1,6 +1,6 @@
 module ActiveRecordBatteries
   module Concerns
-    module Deletable
+    module Deleteable
       extend ActiveSupport::Concern
 
       included do

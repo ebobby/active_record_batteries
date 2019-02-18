@@ -24,7 +24,7 @@ ActiveRecord::Schema.define do
     # Sluggable
     t.string :slug
 
-    # Deletable
+    # Deleteable
     t.datetime :deleted_at
 
     t.timestamps null: false
@@ -32,7 +32,10 @@ ActiveRecord::Schema.define do
 end
 
 class Author < ActiveRecord::Base
-  batteries! :sluggable, :paginable, :filterable, :relationship_scopes
+  include ActiveRecordBatteries::Concerns::Sluggable,
+          ActiveRecordBatteries::Concerns::Paginable,
+          ActiveRecordBatteries::Concerns::Filterable,
+          ActiveRecordBatteries::Concerns::RelationshipScopes
 
   has_many :articles
 
@@ -42,7 +45,11 @@ class Author < ActiveRecord::Base
 end
 
 class Article < ActiveRecord::Base
-  batteries! :sluggable, :paginable, :filterable, :relationship_scopes, :deletable
+  include ActiveRecordBatteries::Concerns::Sluggable,
+          ActiveRecordBatteries::Concerns::Paginable,
+          ActiveRecordBatteries::Concerns::Filterable,
+          ActiveRecordBatteries::Concerns::RelationshipScopes,
+          ActiveRecordBatteries::Concerns::Deleteable
 
   belongs_to :author
 
