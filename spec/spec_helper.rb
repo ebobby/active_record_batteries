@@ -24,7 +24,7 @@ ActiveRecord::Schema.define do
     # Sluggable
     t.string :slug
 
-    # Deleteable
+    # Deletable
     t.datetime :deleted_at
 
     t.timestamps null: false
@@ -45,7 +45,7 @@ class Article < ActiveRecord::Base
   include ActiveRecordBatteries::Concerns::Sluggable,
           ActiveRecordBatteries::Concerns::Paginable,
           ActiveRecordBatteries::Concerns::Filterable,
-          ActiveRecordBatteries::Concerns::Deleteable
+          ActiveRecordBatteries::Concerns::Deletable
 
   belongs_to :author
 
