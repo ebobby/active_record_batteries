@@ -7,7 +7,11 @@ module ActiveRecordBatteries
         # Default items per page
         page_items 25
 
-        scope :paginate, lambda { |page, page_items = @page_items|
+        klass = self
+
+        scope :paginate, lambda { |page, page_items = nil|
+          page_items ||= klass.instance_variable_get(:@page_items)
+
           limit(page_items)
             .offset(([page.to_i, 1].max - 1) * page_items)
             .extending do
