@@ -34,21 +34,17 @@ end
 class Author < ActiveRecord::Base
   include ActiveRecordBatteries::Concerns::Sluggable,
           ActiveRecordBatteries::Concerns::Paginable,
-          ActiveRecordBatteries::Concerns::Filterable,
-          ActiveRecordBatteries::Concerns::RelationshipScopes
+          ActiveRecordBatteries::Concerns::Filterable
 
   has_many :articles
 
   filter_add :by_slug
-
-  relationship_scopes :articles
 end
 
 class Article < ActiveRecord::Base
   include ActiveRecordBatteries::Concerns::Sluggable,
           ActiveRecordBatteries::Concerns::Paginable,
           ActiveRecordBatteries::Concerns::Filterable,
-          ActiveRecordBatteries::Concerns::RelationshipScopes,
           ActiveRecordBatteries::Concerns::Deleteable
 
   belongs_to :author
