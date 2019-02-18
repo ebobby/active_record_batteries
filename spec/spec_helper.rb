@@ -38,7 +38,7 @@ class Author < ActiveRecord::Base
 
   has_many :articles
 
-  filter_add :by_slug
+  filter_by :by_slug
 end
 
 class Article < ActiveRecord::Base
@@ -51,8 +51,8 @@ class Article < ActiveRecord::Base
 
   slug_base_column :title
 
-  filter_add :by_slug
-  filter_add :by_title, ->(title) { where(title: title) }
+  filter_by :by_slug
+  filter_by :by_title, ->(title) { where(title: title) }
 
   page_items 5
 end
