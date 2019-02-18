@@ -146,4 +146,15 @@ RSpec.describe ActiveRecordBatteries do
               total_pages).to eq(Author.pages)
     end
   end
+
+  context "Sluggable" do
+    it "should have a slug" do
+      expect(Article.create(title: "Hello, world").slug).to eq("hello-world")
+    end
+
+    it "should qualify slugs" do
+      expect { Article.create!(title: "Hello, world") }.to_not raise_error
+      expect { Article.create!(title: "Hello, world") }.to_not raise_error
+    end
+  end
 end
